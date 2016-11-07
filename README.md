@@ -12,4 +12,10 @@
 ###As you or the dealer hits, your hand values will be updated.
 ###After you bust (over 21) you will lose and dealer will win.
 ###Aces can count as either 1 or 11 points in this game.
-###If dealer gets 17 or more, he will never hit. 
+###If dealer gets 17 or more, he will never hit.
+
+
+###To replay, simple run playingcard.py again!
+
+
+#GOOD LUCK. HAVE FUN.
