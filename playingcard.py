@@ -10,16 +10,17 @@ class PlayingCard():
         self.value = value
     def __repr__(self):
         if self.value == 1:
-            return 'ace' + ' of ' + str(self.suit)
+            self.value = 11
+            return 'Ace' + ' of ' + str(self.suit)
         if self.value == 11:
             self.value = 10
-            return 'jack' + ' of ' + str(self.suit)
+            return 'Jack' + ' of ' + str(self.suit)
         if self.value == 12:
             self.value = 10
-            return 'queen' + ' of ' + str(self.suit)
+            return 'Queen' + ' of ' + str(self.suit)
         if self.value == 13:
             self.value = 10
-            return 'king' + ' of ' + str(self.suit)
+            return 'King' + ' of ' + str(self.suit)
 
         return str(self.value) + ' of ' + str(self.suit)
     def short(self):
@@ -77,46 +78,75 @@ starting_deck.shuffle()
 print(starting_deck[0])
 print(starting_deck[1])
 
-print("here is the dealer's starting hand: {} and {}".format(starting_deck[2], starting_deck[3]))
+print("here is the dealer's starting hand: {} and ###".format(starting_deck[2]))
+hidden_card = str(starting_deck[3])
 player_hand_sum += starting_deck.hit().value
 player_hand_sum += starting_deck.hit().value
+if player_hand_sum > 21:
+    player_hand_sum -= 10
 dealer_hand_sum += starting_deck.hit().value
 dealer_hand_sum += starting_deck.hit().value
-print(dealer_hand_sum)
+if dealer_hand_sum > 21:
+    dealer_hand_sum -= 10
 
-while player_hand_sum <=21:
-    print("hand total is: {}".format(player_hand_sum))
-    user_input = input("would you like to hit or stand? (H/S)")
+while player_hand_sum <= 21:
+    print("your total is: {}".format(player_hand_sum))
+    user_input = input("would you like to hit or stand? (H/S) ".lower())
     if user_input == 'h':
         print(starting_deck[0])
-        player_hand_sum += starting_deck.hit().value
-        if player_hand_sum >21:
-            print("YOU LOSE")
+        if starting_deck[0].value == 11:
+            if player_hand_sum + 11 <= 21:
+                player_hand_sum += starting_deck.hit().value
+            else:
+                player_hand_sum += 1
+                starting_deck.hit()
+        else:
+            player_hand_sum += starting_deck.hit().value
+        if player_hand_sum > 21:
+            print("YOU LOSE! Hidden card: {}".format(hidden_card))
         elif player_hand_sum == 21:
-            if dealer_hand_sum <=17 and dealer_hand_sum < player_hand_sum:
+            if dealer_hand_sum <= 16:
                 print("dealer hits: {}".format(starting_deck[0]))
-                dealer_hand_sum += starting_deck.hit().value
+                if starting_deck[0].value == 11:
+                    if dealer_hand_sum + 11 <= 21:
+                        dealer_hand_sum += starting_deck.hit().value
+                    else:
+                        dealer_hand_sum + 1
+                        starting_deck.hit()
+                else:
+                    dealer_hand_sum += starting_deck.hit().value
                 if dealer_hand_sum == 21:
                     print("you TIE")
-            elif dealer_hand_sum > 17 and dealer_hand_sum < player_hand_sum:
+            elif dealer_hand_sum >= 17:
                 print("PLAYER WINS!")
                 exit()
-            elif dealer_hand_sum >= player_hand_sum and dealer_hand_sum <= 21:
-                print("DEALER WINS!")
+            elif dealer_hand_sum == 21:
+                print("YOU TIE!")
                 exit()
             else:
                 print("YOU WIN")
                 exit()
     elif dealer_hand_sum >= player_hand_sum:
-        print("YOU LOSE!")
+        print("YOU LOSE! Hidden card: {}".format(hidden_card))
         exit()
     else:
+        print("Dealer hidden card: {}".format(hidden_card))
         while dealer_hand_sum < 17:
             if dealer_hand_sum < player_hand_sum:
                 print("dealer hits: {}".format(starting_deck[0]))
-                dealer_hand_sum += starting_deck.hit().value
+                if starting_deck[0].value == 11:
+                    if dealer_hand_sum + 11 <= 21:
+                        dealer_hand_sum += starting_deck.hit().value
+                    else:
+                        dealer_hand_sum + 1
+                        starting_deck.hit()
+                else:
+                    dealer_hand_sum += starting_deck.hit().value
+                    if dealer_hand_sum > 21:
+                        print("YOU WIN!")
+                        exit()
                 if dealer_hand_sum == 21:
-                    print("YOU LOSE!")
+                    print("YOU LOSE! Hidden card: {}".format(hidden_card))
                     exit()
                 elif dealer_hand_sum > 21:
                     print("YOU WIN!")
@@ -127,12 +157,18 @@ while player_hand_sum <=21:
                 print("PLAYER WINS!")
                 exit()
             elif dealer_hand_sum >= player_hand_sum and dealer_hand_sum <= 21:
-                print("DEALER WINS!")
+                print("DEALER WINS! Hidden card: {}".format(hidden_card))
                 exit()
             else:
                 print("you lose")
-        print("you win!")
-        exit()
+        if dealer_hand_sum >= 17 and dealer_hand_sum <= 21 and dealer_hand_sum > player_hand_sum:
+            print("you lose! Hidden card: {}".format(hidden_card))
+            exit()
+        else:
+            print("YOU WIN!")
+            exit()
+
+
 
 
 
